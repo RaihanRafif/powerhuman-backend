@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class updateCompanyRequest extends FormRequest
+class updateEmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,14 @@ class updateCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'company_id' => 'required|integer|exists:companies,id'
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'gender' => 'required|string|in:MALE,FEMALE',
+            'age' => 'required|integer',
+            'phone' => 'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'team_id' => 'required|integer|exists:teams,id',
+            'role_id' => 'required|integer|exists:roles,id'
         ];
     }
 }
