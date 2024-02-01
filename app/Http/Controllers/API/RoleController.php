@@ -63,7 +63,7 @@ class RoleController extends Controller
         $name = $request->input('name');
         $with_responsibilities = $request->input('with_responsibilities', 0);
 
-        $roleQuery = Role::query();
+        $roleQuery = Role::withCount('responsibilities');
 
         if ($id) {
             $role = $roleQuery->with('responsibilities')->find($id);

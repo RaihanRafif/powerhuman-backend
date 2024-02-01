@@ -17,7 +17,6 @@ class EmployeeController extends Controller
     public function create(CreateEmployeeRequest $request)
     {
         try {
-            $path = null;
             if ($request->hasFile('photo')) {
                 $path = $request->file('photo')->store('public/icons');
             }
@@ -28,7 +27,7 @@ class EmployeeController extends Controller
                 'gender' => $request->gender,
                 'age' => $request->age,
                 'phone' => $request->phone,
-                'photo' => $path,
+                'photo' => isset($path) ? $path : '',
                 'team_id' => $request->team_id,
                 'role_id' => $request->role_id,
             ]);
@@ -84,8 +83,9 @@ class EmployeeController extends Controller
         $phone = $request->input('phone');
         $team_id = $request->input('team_id');
         $role_id = $request->input('role_id');
+        $company_id = $request->input('company_id');
 
-        $employeeQuery = Employee::query();
+        $employeeQuery = Employee::with('team','role');
 
         if ($id) {
             $employee = $employeeQuery->with(['team', 'role'])->find($id);
@@ -117,6 +117,12 @@ class EmployeeController extends Controller
 
         if ($team_id) {
             $employees->where('team_id', $team_id);
+        }
+
+        if ($company_id) {
+            $employees->whereHas('team', function ($query) use ($company_id) {
+                $query->where('company_id', $company_id);
+            });
         }
 
 
